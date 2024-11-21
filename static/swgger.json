@@ -1,0 +1,179 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Travel API - Microservices",
+        "description": "Global API documentation for Travel API with Destination, User, and Authentication services.",
+        "version": "1.0.0"
+    },
+    "host": "localhost",
+    "schemes": ["http"],
+    "paths": {
+        "/destinations": {
+            "get": {
+                "tags": ["Destination Service"],
+                "description": "Retrieve all travel destinations",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": { "type": "string", "example": "Paris" },
+                                    "description": { "type": "string", "example": "City of Light" },
+                                    "location": { "type": "string", "example": "France" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/destinations/{id}": {
+            "delete": {
+                "tags": ["Destination Service"],
+                "description": "Delete a specific travel destination",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "ID of the destination to delete"
+                    },
+                    {
+                        "name": "Role",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "description": "Role of the user (Admin required)"
+                    }
+                ],
+                "responses": {
+                    "200": { "description": "Deleted successfully" },
+                    "403": { "description": "Unauthorized" },
+                    "404": { "description": "Destination not found" }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": ["User Service"],
+                "description": "Register a new user",
+                "parameters": [
+                    {
+                        "name": "User Registration Data",
+                        "in": "body",
+                        "description": "JSON data for new user registration",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "string", "example": "John Doe" },
+                                "email": { "type": "string", "example": "john@example.com" },
+                                "password": { "type": "string", "example": "password123" },
+                                "role": { "type": "string", "example": "User" }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": { "description": "User registered successfully" },
+                    "400": { "description": "User already exists or invalid data" }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": ["User Service"],
+                "description": "Authenticate a user and provide an access token",
+                "parameters": [
+                    {
+                        "name": "User Login Data",
+                        "in": "body",
+                        "description": "JSON data for user login",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "email": { "type": "string", "example": "john@example.com" },
+                                "password": { "type": "string", "example": "password123" }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": { "type": "string", "example": "Login successful" },
+                                "role": { "type": "string", "example": "User" }
+                            }
+                        }
+                    },
+                    "401": { "description": "Invalid credentials" }
+                }
+            }
+        },
+        "/profile": {
+            "get": {
+                "tags": ["User Service"],
+                "description": "Retrieve the profile of the authenticated user",
+                "parameters": [
+                    {
+                        "name": "Email",
+                        "in": "header",
+                        "description": "Email address of the authenticated user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User profile retrieved successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "string", "example": "John Doe" },
+                                "email": { "type": "string", "example": "john@example.com" },
+                                "role": { "type": "string", "example": "User" }
+                            }
+                        }
+                    },
+                    "404": { "description": "User not found" }
+                }
+            }
+        },
+        "/validate-token": {
+            "post": {
+                "tags": ["Authentication Service"],
+                "description": "Validate a user token and return the associated role",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token to validate",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token validated successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "role": { "type": "string", "example": "Admin" }
+                            }
+                        }
+                    },
+                    "403": { "description": "Invalid token" }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}
